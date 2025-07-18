@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>一番賞抽獎活動</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: 'var(--primary, #BBA0CB)',
+            dark: 'var(--dark, #7E5A9B)',
+            light: 'var(--light, #EBD9F9)'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body id="mainBody" class="bg-light min-h-screen flex flex-row transition-all duration-300">
+  <!-- 左側選單（可展開/摺疊） -->
+  <aside id="sidebar" class="w-96 min-h-screen bg-white shadow-lg p-6 flex flex-col gap-6 transition-all duration-300 relative">
+    <div id="sidebarContent">
+      <h2 class="text-xl font-bold text-dark">設定面板</h2>
+      <div>
+        <label class="block font-semibold text-dark mt-4 mb-1"># 標題文字</label>
+        <input id="settingTitle" type="text" class="w-full p-2 border border-primary rounded text-sm" value="一番賞抽獎活動" />
+      </div>
+      <div>
+        <label class="block font-semibold text-dark mt-4 mb-1"># 獎項與數量</label>
+        <div id="prizeSettings" class="flex flex-col gap-2"></div>
+        <button id="addPrizeBtn" class="mt-2 px-3 py-1 bg-primary text-white rounded hover:bg-dark">新增獎項</button>
+      </div>
+      <div>
+        <label class="block font-semibold text-dark mt-4 mb-1"># 主題色系</label>
+        <div id="themeSelect" class="flex gap-2 flex-wrap"></div>
+      </div>
+    </div>
+  </aside>
+  <!-- 主內容區 -->
+  <main id="mainContent" class="flex-1 flex flex-col items-center p-6 transition-all duration-300">
+    <div class="w-full max-w-[1200px] mx-auto">
+      <h1 id="mainTitle" class="text-3xl font-bold mb-6 text-dark text-center">🎁 一番賞抽獎活動 🎁</h1>
+      <div class="flex flex-wrap gap-6 w-full justify-center">
+        <!-- 抽獎格子 -->
+        <div id="grid" class="grid gap-2 max-w-[600px]"></div>
+        <!-- 獎品清單與 ID 輸入 -->
+        <div class="bg-white p-4 rounded-xl shadow inline-block max-w-[300px] w-full">
+          <h2 class="text-lg font-bold mb-2 text-dark">🎯 獎品清單</h2>
+          <div id="prize-stats" class="text-sm space-y-2 mb-4"></div>
+          <label for="userIdInput" class="block mb-1 font-semibold text-dark">🆔 請輸入抽獎者圖奇ID</label>
+          <input type="text" id="userIdInput" class="w-full p-2 border border-primary rounded text-sm" placeholder="請輸入圖奇ID" />
+        </div>
+      </div>
+      <!-- 抽獎結果 -->
+      <div id="result" class="mt-8 mb-10 text-xl font-semibold text-dark text-center">🎉 抽獎結果 🎉</div>
+      <!-- 抽獎紀錄表 -->
+      <div class="w-full max-w-[1000px] mx-auto">
+        <table class="min-w-full border border-primary rounded text-left text-sm">
+          <thead class="bg-primary text-white">
+            <tr>
+              <th class="px-4 py-2 border border-primary">獎號</th>
+              <th class="px-4 py-2 border border-primary">獎品</th>
+              <th class="px-4 py-2 border border-primary">ID</th>
+              <th class="px-4 py-2 border border-primary">時間</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody" class="bg-white max-h-[150px] overflow-y-auto"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <script>
+    // 主題色系定義
+    const themes = [
+      {
+        name: '紫色系',
+        primary: '#BBA0CB',
+        dark: '#7E5A9B',
+        light: '#EBD9F9'
+      },
+      {
+        name: '藍色系',
+        primary: '#7CA7C7',
+        dark: '#466B8A',
+        light: '#E6F0FA'
+      },
+      {
+        name: '綠色系',
+        primary: '#A3C9A8',
+        dark: '#5B7B6E',
+        light: '#F0F7F4'
+      },
+      {
+        name: '粉色系',
+        primary: '#E9B7C3',
+        dark: '#B97A95',
+        light: '#FCE8EF'
+      },
+      {
+        name: '灰色系',
+        primary: '#B0B0B0',
+        dark: '#6E6E6E',
+        light: '#F5F5F5'
+      }
+    ];
+
+    // 讀取 localStorage 設定
+    function getSettings() {
+      const defaultPrizes = [
+        { name: 'A賞 獎品A', count: 1 },
+        { name: 'B賞 獎品B', count: 5 },
+        { name: 'C賞 獎品C', count: 10 },
+        { name: 'D賞 獎品D', count: 30 }
+      ];
+      const settings = JSON.parse(localStorage.getItem('lotterySettings') || '{}');
+      return {
+        title: settings.title || '一番賞抽獎活動',
+        prizes: settings.prizes || defaultPrizes,
+        themeIdx: settings.themeIdx || 0
+      };
+    }
+    function saveSettings(settings) {
+      localStorage.setItem('lotterySettings', JSON.stringify(settings));
+    }
+
+    // 動態渲染設定面板
+    function renderPrizeSettings(prizes) {
+      const container = document.getElementById('prizeSettings');
+      container.innerHTML = '';
+      prizes.forEach((prize, idx) => {
+        const awardCode = String.fromCharCode(65 + idx) + '賞';
+        const row = document.createElement('div');
+        row.className = 'flex gap-2 items-center';
+        row.innerHTML = `
+          <span class="font-bold text-primary w-8">${awardCode}</span>
+          <input type="text" class="p-1 border rounded w-50" value="${prize.name}" data-idx="${idx}" data-type="name" placeholder="獎項名稱" />
+          <input type="number" min="1" class="p-1 border rounded w-16" value="${prize.count}" data-idx="${idx}" data-type="count" />
+          <button class="text-red-500 font-bold" data-idx="${idx}" data-type="remove">✕</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+    function renderThemeSelect(selectedIdx) {
+      const container = document.getElementById('themeSelect');
+      container.innerHTML = '';
+      themes.forEach((theme, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `w-8 h-8 rounded-full border-2 ${selectedIdx === idx ? 'border-dark' : 'border-gray-300'} flex-shrink-0`;
+        btn.style.background = theme.primary;
+        btn.title = theme.name;
+        btn.onclick = () => {
+          document.querySelectorAll('#themeSelect button').forEach((b, i) => b.classList.toggle('border-dark', i === idx));
+          document.getElementById('themeSelect').dataset.selected = idx;
+          // 立即套用主題色
+          applyTheme(themes[idx]);
+          // 儲存設定
+          const settings = getSettings();
+          saveSettings({
+            ...settings,
+            themeIdx: idx
+          });
+          // 立即刷新主畫面
+          main();
+        };
+        container.appendChild(btn);
+      });
+      container.dataset.selected = selectedIdx;
+    }
+
+    // 初始化設定面板
+    function initSettingsPanel() {
+      const settings = getSettings();
+      document.getElementById('settingTitle').value = settings.title;
+      renderPrizeSettings(settings.prizes);
+      renderThemeSelect(settings.themeIdx);
+      // 新增獎項
+      document.getElementById('addPrizeBtn').onclick = () => {
+        settings.prizes.push({ name: '', count: 1 });
+        renderPrizeSettings(settings.prizes);
+        // 立即儲存並刷新
+        saveSettings(settings);
+        main();
+      };
+      // 編輯獎項
+      document.getElementById('prizeSettings').oninput = (e) => {
+        const idx = +e.target.dataset.idx;
+        const type = e.target.dataset.type;
+        if (type === 'name') settings.prizes[idx].name = e.target.value;
+        if (type === 'count') settings.prizes[idx].count = Math.max(1, +e.target.value);
+        // 立即儲存並刷新
+        saveSettings(settings);
+        main();
+      };
+      // 刪除獎項
+      document.getElementById('prizeSettings').onclick = (e) => {
+        if (e.target.dataset.type === 'remove') {
+          settings.prizes.splice(+e.target.dataset.idx, 1);
+          renderPrizeSettings(settings.prizes);
+          // 立即儲存並刷新
+          saveSettings(settings);
+          main();
+        }
+      };
+      // 標題即時更新
+      document.getElementById('settingTitle').oninput = (e) => {
+        settings.title = e.target.value;
+        saveSettings(settings);
+        main();
+      };
+    }
+
+    // 應用主題色
+    function applyTheme(theme) {
+      document.documentElement.style.setProperty('--primary', theme.primary);
+      document.documentElement.style.setProperty('--dark', theme.dark);
+      document.documentElement.style.setProperty('--light', theme.light);
+    }
+
+    // 主程式
+    function main() {
+      const settings = getSettings();
+      applyTheme(themes[settings.themeIdx]);
+      document.getElementById('mainTitle').textContent = settings.title;
+      // 產生獎品清單
+      const prizeList = [];
+      settings.prizes.forEach((prize, idx) => {
+        const awardCode = String.fromCharCode(65 + idx) + '賞';
+        for (let i = 0; i < prize.count; i++) prizeList.push(`${awardCode} ${prize.name}`);
+      });
+      // 洗牌
+      function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+      const shuffledPrizes = shuffle([...prizeList]);
+      const prizeCounts = {};
+      prizeList.forEach(p => prizeCounts[p] = (prizeCounts[p] || 0) + 1);
+      // 更新獎品清單區
+      function updatePrizeStats() {
+        const list = document.getElementById('prize-stats');
+        list.innerHTML = '';
+        settings.prizes.forEach((prize, idx) => {
+          const awardCode = String.fromCharCode(65 + idx) + '賞';
+          const count = prizeCounts[`${awardCode} ${prize.name}`] || 0;
+          const wrapper = document.createElement('div');
+          wrapper.className = 'p-2 bg-white rounded border border-primary shadow-sm';
+          const header = document.createElement('div');
+          header.innerHTML = `
+            <span class="text-primary font-bold">【${awardCode}】</span>
+            <span class="text-dark font-semibold ml-2">剩餘 ${count} 件</span>
+          `;
+          const content = document.createElement('div');
+          content.className = 'mt-1 bg-light text-dark font-bold p-1 rounded text-sm';
+          content.textContent = prize.name;
+          wrapper.appendChild(header);
+          wrapper.appendChild(content);
+          list.appendChild(wrapper);
+        });
+      }
+      updatePrizeStats();
+      // 建立抽獎格子
+      const grid = document.getElementById('grid');
+      grid.className = `grid gap-2 max-w-[600px] grid-cols-${Math.min(10, Math.ceil(Math.sqrt(prizeList.length)))}`;
+      grid.innerHTML = '';
+      const result = document.getElementById('result');
+      const userIdInput = document.getElementById('userIdInput');
+      const historyTableBody = document.getElementById('historyTableBody');
+      const drawnResults = [];
+      for (let i = 0; i < prizeList.length; i++) {
+        const btn = document.createElement('button');
+        btn.className = `bg-primary hover:bg-dark text-white font-bold text-base w-14 h-14 rounded flex items-center justify-center transition`;
+        btn.textContent = i + 1;
+        btn.dataset.index = i;
+        btn.onclick = function () {
+          if (btn.disabled) return;
+          const userId = userIdInput.value.trim();
+          if (!userId) {
+            alert('❗ 請先輸入抽獎者ID再進行抽獎 ❗');
+            return;
+          }
+          btn.classList.add('draw-animate');
+          btn.disabled = true;
+          btn.addEventListener('animationend', function handler() {
+            btn.classList.remove('draw-animate');
+            btn.classList.add('fade-out');
+            btn.addEventListener('transitionend', function fadeHandler() {
+              btn.className = 'bg-transparent border border-transparent text-transparent font-semibold w-14 h-14 rounded flex items-center justify-center';
+              btn.textContent = '';
+              btn.removeEventListener('transitionend', fadeHandler);
+            });
+            btn.removeEventListener('animationend', handler);
+          });
+          const prize = shuffledPrizes[i];
+          const now = new Date();
+          const timestamp = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+          drawnResults.unshift({
+            number: i + 1,
+            prize,
+            userId,
+            time: timestamp
+          });
+          if (prizeCounts[prize] > 0) {
+            prizeCounts[prize]--;
+          } else {
+            prizeCounts[prize] = 0;
+          }
+          updatePrizeStats();
+          result.textContent = `🎉 ${userId} 抽中了【#${i + 1}】：${prize}！`;
+          updateHistoryTable();
+        };
+        grid.appendChild(btn);
+      }
+      // 抽獎紀錄表
+      function updateHistoryTable() {
+        historyTableBody.innerHTML = '';
+        drawnResults.forEach(record => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="border border-primary px-4 py-1 font-extrabold">${record.number}</td>
+            <td class="border border-primary px-4 py-1">${record.prize}</td>
+            <td class="border border-primary px-4 py-1">${record.userId}</td>
+            <td class="border border-primary px-4 py-1">${record.time}</td>
+          `;
+          historyTableBody.appendChild(tr);
+        });
+      }
+    }
+    // 防刷新警告
+    let allowUnload = false;
+    window.addEventListener('beforeunload', function (e) {
+      if (!allowUnload) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
+    });
+    window.addEventListener('unload', function () {
+      allowUnload = true;
+    });
+    // 初始化
+    initSettingsPanel();
+    main();
+  </script>
+</body>
+</html>
