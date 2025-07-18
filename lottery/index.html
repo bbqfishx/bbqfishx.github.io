@@ -217,6 +217,10 @@
         renderPrizeSettings(settings.prizes);
         // 立即儲存並刷新
         saveSettings(settings);
+        // 清空抽獎結果與紀錄表
+        document.getElementById('result').textContent = '🎉 抽獎結果 🎉';
+        document.getElementById('historyTableBody').innerHTML = '';
+        document.getElementById('userIdInput').value = '';
         main();
       };
       // 編輯獎項
@@ -314,6 +318,13 @@
         btn.dataset.index = i;
         btn.onclick = function () {
           if (btn.disabled) return;
+          // 新增：檢查獎項名稱與數量
+          const settings = getSettings();
+          const hasInvalidPrize = settings.prizes.some(p => !p.name.trim() || !p.count || p.count < 1);
+          if (hasInvalidPrize) {
+            alert('❗ 請確認所有獎項名稱皆不為空且數量大於0 ❗');
+            return;
+          }
           const userId = userIdInput.value.trim();
           if (!userId) {
             alert('❗ 請先輸入抽獎者ID再進行抽獎 ❗');
