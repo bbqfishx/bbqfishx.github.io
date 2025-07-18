@@ -61,7 +61,7 @@
       <h2 class="text-xl font-bold text-dark">設定面板</h2>
       <div>
         <label class="block font-semibold text-dark mt-4 mb-1"># 標題文字</label>
-        <input id="settingTitle" type="text" class="w-full p-2 border border-primary rounded text-sm" value="一番賞抽獎活動" />
+        <input id="settingTitle" type="text" class="w-full p-2 border border-primary rounded text-sm" value="🎁 一番賞抽獎活動 🎁" />
       </div>
       <div>
         <label class="block font-semibold text-dark mt-4 mb-1"># 獎項與數量</label>
@@ -152,7 +152,7 @@
       ];
       const settings = JSON.parse(localStorage.getItem('lotterySettings') || '{}');
       return {
-        title: settings.title || '一番賞抽獎活動',
+        title: settings.title || '🎁 一番賞抽獎活動 🎁',
         prizes: settings.prizes || defaultPrizes,
         themeIdx: settings.themeIdx || 0
       };
@@ -189,16 +189,15 @@
         btn.onclick = () => {
           document.querySelectorAll('#themeSelect button').forEach((b, i) => b.classList.toggle('border-dark', i === idx));
           document.getElementById('themeSelect').dataset.selected = idx;
-          // 立即套用主題色
+          // 只套用主題色，不刷新主畫面
           applyTheme(themes[idx]);
-          // 儲存設定
+          // 儲存主題色設定
           const settings = getSettings();
           saveSettings({
             ...settings,
             themeIdx: idx
           });
-          // 立即刷新主畫面
-          main();
+          // 不要呼叫 main();
         };
         container.appendChild(btn);
       });
