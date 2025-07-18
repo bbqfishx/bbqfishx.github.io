@@ -18,6 +18,41 @@
       }
     };
   </script>
+  <style>
+    .draw-animate {
+      animation: pop-glow 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 0 0 0 var(--primary, #BBA0CB);
+      will-change: transform, opacity;
+    }
+    @keyframes pop-glow {
+      0% {
+        transform: scale(1) rotate(0deg);
+        box-shadow: 0 0 0 0 var(--primary, #BBA0CB);
+        filter: brightness(1);
+      }
+      40% {
+        transform: scale(1.25) rotate(10deg);
+        box-shadow: 0 0 20px 10px var(--primary, #BBA0CB);
+        filter: brightness(1.5);
+      }
+      70% {
+        transform: scale(0.95) rotate(-8deg);
+        box-shadow: 0 0 10px 5px var(--primary, #BBA0CB);
+        filter: brightness(1.2);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        box-shadow: 0 0 0 0 var(--primary, #BBA0CB);
+        filter: brightness(1);
+      }
+    }
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.7);
+      transition: all 0.15s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform, opacity;
+    }
+  </style>
 </head>
 <body id="mainBody" class="bg-light min-h-screen flex flex-row transition-all duration-300">
   <!-- 左側選單（可展開/摺疊） -->
@@ -110,10 +145,10 @@
     // 讀取 localStorage 設定
     function getSettings() {
       const defaultPrizes = [
-        { name: 'A賞 獎品A', count: 1 },
-        { name: 'B賞 獎品B', count: 5 },
-        { name: 'C賞 獎品C', count: 10 },
-        { name: 'D賞 獎品D', count: 30 }
+        { name: '獎品A', count: 1 },
+        { name: '獎品B', count: 5 },
+        { name: '獎品C', count: 10 },
+        { name: '獎品D', count: 30 }
       ];
       const settings = JSON.parse(localStorage.getItem('lotterySettings') || '{}');
       return {
