@@ -1,1 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>轉蛋機</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+    <div class="app-layout grid grid-cols-12 w-screen min-h-screen">
+        <div class="settings-column col-span-4">
+            <section class="settings-panel" aria-labelledby="settingsTitle">
+                <div class="settings-header">
+                    <div>
+                        <h1 class="settings-title" id="settingsTitle">&#x734E;&#x9805;&#x8A2D;&#x5B9A;</h1>
+                    </div>
+                    <span class="settings-count" id="settingsCount">3 &#x9805; / 6 &#x500B;</span>
+                </div>
 
+                <div class="settings-table-head" aria-hidden="true">
+                    <span>&#x8CDE;&#x5225;</span>
+                    <span>&#x734E;&#x9805;</span>
+                    <span>&#x521D;&#x59CB;&#x6578;&#x91CF;</span>
+                    <span></span>
+                </div>
+
+                <div class="prize-settings-list" id="prizeSettingsList">
+                    <div class="prize-setting-row" data-prize-row>
+                        <span class="prize-rank" data-prize-rank>A&#x8CDE;</span>
+                        <input class="prize-input" type="text" value="A&#x8CDE;&#x54C1;&#x9805;" data-prize-name aria-label="A&#x8CDE;&#x734E;&#x9805;" />
+                        <input class="prize-input prize-quantity" type="number" value="1" min="0" max="999" step="1" data-prize-quantity aria-label="A&#x8CDE;&#x521D;&#x59CB;&#x6578;&#x91CF;" />
+                        <button class="prize-remove-button" type="button" data-remove-prize aria-label="&#x79FB;&#x9664;A&#x8CDE;">&times;</button>
+                    </div>
+                    <div class="prize-setting-row" data-prize-row>
+                        <span class="prize-rank" data-prize-rank>B&#x8CDE;</span>
+                        <input class="prize-input" type="text" value="B&#x8CDE;&#x54C1;&#x9805;" data-prize-name aria-label="B&#x8CDE;&#x734E;&#x9805;" />
+                        <input class="prize-input prize-quantity" type="number" value="2" min="0" max="999" step="1" data-prize-quantity aria-label="B&#x8CDE;&#x521D;&#x59CB;&#x6578;&#x91CF;" />
+                        <button class="prize-remove-button" type="button" data-remove-prize aria-label="&#x79FB;&#x9664;B&#x8CDE;">&times;</button>
+                    </div>
+                    <div class="prize-setting-row" data-prize-row>
+                        <span class="prize-rank" data-prize-rank>C&#x8CDE;</span>
+                        <input class="prize-input" type="text" value="C&#x8CDE;&#x54C1;&#x9805;" data-prize-name aria-label="C&#x8CDE;&#x734E;&#x9805;" />
+                        <input class="prize-input prize-quantity" type="number" value="3" min="0" max="999" step="1" data-prize-quantity aria-label="C&#x8CDE;&#x521D;&#x59CB;&#x6578;&#x91CF;" />
+                        <button class="prize-remove-button" type="button" data-remove-prize aria-label="&#x79FB;&#x9664;C&#x8CDE;">&times;</button>
+                    </div>
+                </div>
+
+                <div class="settings-footer">
+                    <button class="settings-lock-button" type="button" id="settingsLockBtn" aria-label="&#x9396;&#x5B9A;&#x734E;&#x9805;&#x8A2D;&#x5B9A;" aria-pressed="false" title="&#x9396;&#x5B9A;&#x734E;&#x9805;&#x8A2D;&#x5B9A;">
+                        <span class="settings-lock-icon" aria-hidden="true">
+                            <span class="settings-lock-shackle"></span>
+                            <span class="settings-lock-body"></span>
+                        </span>
+                        <span class="sr-only" id="settingsLockText">&#x9396;&#x5B9A;&#x734E;&#x9805;&#x8A2D;&#x5B9A;</span>
+                    </button>
+
+                    <div class="settings-audio-control">
+                        <label class="settings-audio-label" for="sfxVolumeRange">
+                            <span class="settings-audio-icon" aria-hidden="true">
+                                <span class="settings-audio-speaker-body"></span>
+                                <span class="settings-audio-speaker-cone"></span>
+                                <span class="settings-audio-speaker-wave"></span>
+                            </span>
+                            <span class="sr-only">&#x97F3;&#x6548;</span>
+                        </label>
+                        <input class="settings-audio-range" id="sfxVolumeRange" type="range" min="0" max="100" step="1" value="42" aria-label="&#x97F3;&#x6548;&#x97F3;&#x91CF;" />
+                        <span class="settings-audio-value" id="sfxVolumeValue">42%</span>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="settings-action settings-action-primary" type="button" id="addPrizeBtn">&#x65B0;&#x589E;&#x734E;&#x9805;</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="gacha-column col-span-4">
+            <section class="gacha-zone" aria-label="&#x9177;&#x6D1B;&#x7C73;&#x98A8;&#x8F49;&#x86CB;&#x6A5F;">
+                <div class="machine-scene" id="machineScene">
+                    <div class="drop-layer" id="dropLayer" aria-hidden="true"></div>
+
+                    <div class="inventory-summary" aria-live="polite">
+                        <span class="inventory-summary-label">&#x5269;&#x9918;&#x8F49;&#x86CB;</span>
+                        <strong class="inventory-summary-value" id="inventoryTotalRemaining">6</strong>
+                    </div>
+
+                    <div class="machine-frame">
+                        <div class="gacha-machine" id="gachaMachine">
+                            <div class="machine-hat" aria-hidden="true">
+                                <span class="kuromi-ear ear-left"></span>
+                                <span class="kuromi-ear ear-right"></span>
+                                <span class="skull-mark"><span class="skull-nose"></span></span>
+                            </div>
+
+                            <div class="dome-wrap" id="domeWrap">
+                                <div class="machine-dome" id="machineDome">
+                                    <span class="dome-shine"></span>
+                                </div>
+                                <div class="dome-ring"></div>
+                            </div>
+
+                            <div class="machine-body">
+                                <div class="knob-dock">
+                                    <button class="draw-control" type="button" data-draw="1" aria-label="&#x55AE;&#x62BD;">
+                                        <span class="knob-face"><span class="knob-pointer"></span></span>
+                                        <span class="knob-label">&#x55AE;&#x62BD;</span>
+                                    </button>
+                                    <button class="draw-control" type="button" data-draw="5" aria-label="5&#x62BD;">
+                                        <span class="knob-face"><span class="knob-pointer"></span></span>
+                                        <span class="knob-label">5&#x62BD;</span>
+                                    </button>
+                                </div>
+                                <div class="outlet-stack" aria-hidden="true">
+                                    <div class="machine-mouth"></div>
+                                    <div class="chute-target" id="chuteTarget"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal-stage" id="revealStage" aria-hidden="true">
+                        <div class="status-line" id="gachaStatus" aria-live="polite">&#x5F85;&#x6A5F;&#x4E2D;</div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <div class="inventory-column col-span-4">
+            <section class="inventory-panel" aria-label="&#x734E;&#x54C1;&#x6E05;&#x55AE;">
+                <div class="participant-field">
+                    <label class="participant-label" for="twitchIdInput">
+                        &#x8ACB;&#x8F38;&#x5165;&#x62BD;&#x734E;&#x8005;&#x5716;&#x5947;ID
+                    </label>
+                    <input class="participant-input" id="twitchIdInput" type="text" autocomplete="off" placeholder="&#x8ACB;&#x8F38;&#x5165;&#x5716;&#x5947;ID" />
+                </div>
+
+                <div class="inventory-prize-list" id="prizeInventoryList" aria-live="polite"></div>
+
+                <div class="draw-history">
+                    <div class="draw-history-toolbar">
+                        <span class="draw-history-title">&#x62BD;&#x734E;&#x7D00;&#x9304;</span>
+                        <button class="draw-history-copy" id="copyDrawHistoryBtn" type="button" disabled>&#x8907;&#x88FD;&#x8868;&#x683C;</button>
+                    </div>
+                    <div class="draw-history-scroll">
+                        <table class="draw-history-table" aria-label="&#x62BD;&#x734E;&#x7D00;&#x9304;">
+                            <thead>
+                                <tr>
+                                    <th scope="col">&#x5E8F;&#x865F;</th>
+                                    <th scope="col">&#x734E;&#x54C1;</th>
+                                    <th scope="col">ID</th>
+                                </tr>
+                            </thead>
+                            <tbody id="drawHistoryTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="fx-layer" id="fxLayer" aria-hidden="true">
+        <div class="fx-burst-stage" id="fxBurstStage">
+            <div class="burst-core" id="burstCore"></div>
+        </div>
+    </div>
+
+    <div class="prize-modal" id="prizeModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="prizeModalTitle">
+        <div class="modal-backdrop" data-close-modal></div>
+        <div class="prize-dialog">
+            <button class="modal-close" type="button" data-close-modal aria-label="&#x95DC;&#x9589;">&times;</button>
+            <p class="modal-kicker">Prize Reveal</p>
+            <h2 class="modal-title" id="prizeModalTitle">&#x7372;&#x5F97;&#x734E;&#x9805;</h2>
+            <div class="modal-prize-grid" id="modalPrizeGrid"></div>
+        </div>
+    </div>
+
+    <script src="./gacha.js"></script>
+</body>
+</html>
