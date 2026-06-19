@@ -954,9 +954,12 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCardDrawUi({ preserveStatus: true });
 
         scheduleCardDrawStep(() => {
-            removeReturningCards();
             startDeckShuffle();
         }, 620);
+
+        scheduleCardDrawStep(() => {
+            removeReturningCards();
+        }, 1180);
 
         scheduleCardDrawStep(() => {
             finishCardDrawRound();
