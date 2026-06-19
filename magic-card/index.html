@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>&#x9b54;&#x6cd5;&#x5361;&#x724c;</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <script>
+        window.assetVersion = Date.now();
+        document.write(`<link rel="stylesheet" href="./style.css?v=${window.assetVersion}" />`);
+    </script>
+</head>
+<body>
+    <div class="app-layout">
+        <div class="settings-column">
+            <section class="settings-panel" aria-labelledby="settingsTitle">
+                <div class="settings-header">
+                    <div>
+                        <h1 class="settings-title" id="settingsTitle">&#x734E;&#x9805;&#x8A2D;&#x5B9A;</h1>
+                    </div>
+                    <span class="settings-count" id="settingsCount">3 &#x9805; / 6 &#x500B;</span>
+                </div>
+
+                <div class="settings-table-head" aria-hidden="true">
+                    <span>&#x8CDE;&#x5225;</span>
+                    <span>&#x734E;&#x9805;</span>
+                    <span>&#x521D;&#x59CB;&#x6578;&#x91CF;</span>
+                    <span></span>
+                </div>
+
+                <div class="prize-settings-list" id="prizeSettingsList">
+                    <div class="prize-setting-row" data-prize-row>
+                        <span class="prize-rank" data-prize-rank>A&#x8CDE;</span>
+                        <input class="prize-input" type="text" value="A&#x8CDE;&#x54C1;&#x9805;" data-prize-name aria-label="A&#x8CDE;&#x734E;&#x9805;" />
+                        <input class="prize-input prize-quantity" type="number" value="1" min="0" max="999" step="1" data-prize-quantity aria-label="A&#x8CDE;&#x521D;&#x59CB;&#x6578;&#x91CF;" />
+                        <button class="prize-remove-button" type="button" data-remove-prize aria-label="&#x79FB;&#x9664;A&#x8CDE;">&times;</button>
+                    </div>
+                    <div class="prize-setting-row" data-prize-row>
+                        <span class="prize-rank" data-prize-rank>B&#x8CDE;</span>
+                        <input class="prize-input" type="text" value="B&#x8CDE;&#x54C1;&#x9805;" data-prize-name aria-label="B&#x8CDE;&#x734E;&#x9805;" />
+                        <input class="prize-input prize-quantity" type="number" value="2" min="0" max="999" step="1" data-prize-quantity aria-label="B&#x8CDE;&#x521D;&#x59CB;&#x6578;&#x91CF;" />
+                        <button class="prize-remove-button" type="button" data-remove-prize aria-label="&#x79FB;&#x9664;B&#x8CDE;">&times;</button>
+                    </div>
+                    <div class="prize-setting-row" data-prize-row>
+                        <span class="prize-rank" data-prize-rank>C&#x8CDE;</span>
+                        <input class="prize-input" type="text" value="C&#x8CDE;&#x54C1;&#x9805;" data-prize-name aria-label="C&#x8CDE;&#x734E;&#x9805;" />
+                        <input class="prize-input prize-quantity" type="number" value="3" min="0" max="999" step="1" data-prize-quantity aria-label="C&#x8CDE;&#x521D;&#x59CB;&#x6578;&#x91CF;" />
+                        <button class="prize-remove-button" type="button" data-remove-prize aria-label="&#x79FB;&#x9664;C&#x8CDE;">&times;</button>
+                    </div>
+                </div>
+
+                <div class="settings-footer">
+                    <button class="settings-lock-button" type="button" id="settingsLockBtn" aria-label="&#x9396;&#x5B9A;&#x734E;&#x9805;&#x8A2D;&#x5B9A;" aria-pressed="false" title="&#x9396;&#x5B9A;&#x734E;&#x9805;&#x8A2D;&#x5B9A;">
+                        <span class="settings-lock-icon" aria-hidden="true">
+                            <span class="settings-lock-shackle"></span>
+                            <span class="settings-lock-body"></span>
+                        </span>
+                        <span class="sr-only" id="settingsLockText">&#x9396;&#x5B9A;&#x734E;&#x9805;&#x8A2D;&#x5B9A;</span>
+                    </button>
+
+                    <div class="settings-audio-control">
+                        <label class="settings-audio-label" for="sfxVolumeRange">
+                            <span class="settings-audio-icon" aria-hidden="true">
+                                <span class="settings-audio-speaker-body"></span>
+                                <span class="settings-audio-speaker-cone"></span>
+                                <span class="settings-audio-speaker-wave"></span>
+                            </span>
+                            <span class="sr-only">&#x97F3;&#x6548;</span>
+                        </label>
+                        <input class="settings-audio-range" id="sfxVolumeRange" type="range" min="0" max="100" step="1" value="42" aria-label="&#x97F3;&#x6548;&#x97F3;&#x91CF;" />
+                        <span class="settings-audio-value" id="sfxVolumeValue">42%</span>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="settings-action settings-action-primary" type="button" id="addPrizeBtn">&#x65B0;&#x589E;&#x734E;&#x9805;</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="content-column">
+            <section class="content-stage" aria-label="&#x9B54;&#x6CD5;&#x5361;&#x724C;&#x62BD;&#x734E;&#x5340;">
+                <div class="arcane-board" id="arcaneBoard">
+                    <div class="arcane-orbit" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="arcane-status" aria-live="polite">
+                        <span class="arcane-stock">
+                            <span>&#x5269;&#x9918;</span>
+                            <strong id="deckRemainingCount">0</strong>
+                        </span>
+                    </div>
+
+                    <div class="deck-area">
+                        <button class="deck-stack" id="cardDeckButton" type="button" aria-label="抽出候選卡牌">
+                            <span class="deck-card deck-card-back deck-card-1" aria-hidden="true"></span>
+                            <span class="deck-card deck-card-back deck-card-2" aria-hidden="true"></span>
+                            <span class="deck-card deck-card-back deck-card-3" aria-hidden="true">
+                                <span class="deck-sigil">
+                                    <span class="sigil-ring"></span>
+                                    <span class="sigil-core"></span>
+                                </span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="card-fan" id="cardFan" aria-live="polite"></div>
+
+                    <button class="arcane-confirm" id="arcaneConfirmButton" type="button" hidden>&#x78BA;&#x8A8D;</button>
+                </div>
+            </section>
+        </div>
+
+        <div class="inventory-column">
+            <section class="inventory-panel" aria-label="&#x734E;&#x54C1;&#x6E05;&#x55AE;">
+                <div class="participant-field">
+                    <label class="participant-label" for="twitchIdInput">
+                        &#x8ACB;&#x8F38;&#x5165;&#x62BD;&#x734E;&#x8005;&#x5716;&#x5947;ID
+                    </label>
+                    <input class="participant-input" id="twitchIdInput" type="text" autocomplete="off" placeholder="&#x8ACB;&#x8F38;&#x5165;&#x5716;&#x5947;ID" />
+                </div>
+
+                <div class="inventory-prize-list" id="prizeInventoryList" aria-live="polite"></div>
+
+                <div class="draw-history">
+                    <div class="draw-history-toolbar">
+                        <span class="draw-history-title">&#x62BD;&#x734E;&#x7D00;&#x9304;</span>
+                        <button class="draw-history-copy" id="copyDrawHistoryBtn" type="button" disabled>&#x8907;&#x88FD;&#x8868;&#x683C;</button>
+                    </div>
+                    <div class="draw-history-scroll">
+                        <table class="draw-history-table" aria-label="&#x62BD;&#x734E;&#x7D00;&#x9304;">
+                            <thead>
+                                <tr>
+                                    <th scope="col">&#x5E8F;&#x865F;</th>
+                                    <th scope="col">&#x734E;&#x54C1;</th>
+                                    <th scope="col">ID</th>
+                                </tr>
+                            </thead>
+                            <tbody id="drawHistoryTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.write(`<script src="./app.js?v=${window.assetVersion || Date.now()}"><\/script>`);
+    </script>
+</body>
+</html>
