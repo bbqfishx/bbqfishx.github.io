@@ -6,13 +6,16 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>轉蛋機</title>
+    <title>&#x8f49;&#x86cb;&#x6a5f;</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="./style.css" />
+    <script>
+        window.assetVersion = Date.now();
+        document.write(`<link rel="stylesheet" href="./style.css?v=${window.assetVersion}" />`);
+    </script>
 </head>
 <body>
     <div class="app-layout grid grid-cols-12 w-screen min-h-screen">
@@ -183,6 +186,8 @@
         </div>
     </div>
 
-    <script src="./gacha.js"></script>
+    <script>
+        document.write(`<script src="./gacha.js?v=${window.assetVersion || Date.now()}"><\/script>`);
+    </script>
 </body>
 </html>
