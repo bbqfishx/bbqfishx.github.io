@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
     const prizeTonePalette = [
         "#f0c27b", "#ef8bb6", "#8580c4", "#9db7e8",
-        "#93cfc6", "#d798c4", "#b6cfaa", "#bca38f"
+        "#93cfc6", "#bca38f", "#b6cfaa", "#d798c4"
     ];
     const prizeSettingsStorageKey = "kuromi-gacha-prize-settings-v1";
     const sfxVolumeStorageKey = "kuromi-gacha-sfx-volume-v1";
