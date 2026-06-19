@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupPrizeSettings();
     setupSettingsLock();
     setupAudioControls();
+    setupLeaveGuard();
 
     gsap.set(".ear-left", { transformOrigin: "88% 96%", rotation: -34 });
     gsap.set(".ear-right", { transformOrigin: "12% 96%", rotation: 34 });
@@ -159,6 +160,13 @@ document.addEventListener("DOMContentLoaded", () => {
         sfxVolumeRange.addEventListener("change", () => {
             syncAudioVolume();
             audio.play("ui-click", { volume: 0.55 });
+        });
+    }
+
+    function setupLeaveGuard() {
+        window.addEventListener("beforeunload", (event) => {
+            event.preventDefault();
+            event.returnValue = "";
         });
     }
 
